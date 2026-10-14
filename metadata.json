@@ -1,0 +1,8 @@
+{
+  "name": "Retry-After Allowlist",
+  "author": "Bowen",
+  "description": "Bypass shared Retry-After cooldowns for selected feed hosts.",
+  "version": "1.0.0",
+  "entrypoint": "RetryAfterAllowlist",
+  "type": "system"
+}

@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.1', '8.3', '8.5']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+      - name: Lint PHP
+        run: find . -type f \( -name '*.php' -o -name '*.phtml' \) -print0 | xargs -0 -n1 php -l
+      - name: Validate metadata and translations
+        run: |
+          php -r 'json_decode(file_get_contents("metadata.json"), true, flags: JSON_THROW_ON_ERROR);'
+          php -r '$en = require "i18n/en/ext.php"; $zh = require "i18n/zh-cn/ext.php"; if (array_keys($en["retry_after_allowlist"]) !== array_keys($zh["retry_after_allowlist"])) { exit(1); }'
+      - name: Test allowlist matching
+        run: php tests/run.php
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - name: Package extension
+        run: |
+          git archive --format=zip --prefix=xExtension-RetryAfterAllowlist/ HEAD -o xExtension-RetryAfterAllowlist.zip
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" "xExtension-RetryAfterAllowlist.zip" --verify-tag --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes

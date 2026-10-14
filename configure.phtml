@@ -1,0 +1,29 @@
+<?php
+declare(strict_types=1);
+/** @var RetryAfterAllowlistExtension $this */
+?>
+<form action="<?= _url('extension', 'configure', 'e', urlencode($this->getName())) ?>" method="post">
+	<input type="hidden" name="_csrf" value="<?= FreshRSS_Auth::csrfToken() ?>" />
+	<div class="form-group">
+		<div class="group-controls">
+			<p><?= _t('ext.retry_after_allowlist.description') ?></p>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="group-name" for="retry_after_hosts"><?= _t('ext.retry_after_allowlist.hosts') ?></label>
+		<div class="group-controls">
+			<textarea id="retry_after_hosts" name="retry_after_hosts" rows="6" cols="45" spellcheck="false" placeholder="rsshub.example.com:443&#10;rsshub:1200" aria-describedby="retry_after_help<?= $this->invalidLine() !== null ? ' retry_after_error' : '' ?>"<?= $this->invalidLine() !== null ? ' aria-invalid="true"' : '' ?>><?= htmlspecialchars($this->hostsInput(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') ?></textarea>
+			<?php if ($this->invalidLine() !== null) { ?>
+				<p id="retry_after_error" class="alert alert-error" role="alert"><?= _t('ext.retry_after_allowlist.invalid', $this->invalidLine()) ?></p>
+			<?php } ?>
+		</div>
+		<p class="form-help" id="retry_after_help"><?= _t('ext.retry_after_allowlist.help') ?></p>
+		<p class="form-help"><?= _t('ext.retry_after_allowlist.scope') ?></p>
+	</div>
+	<div class="form-group form-actions">
+		<div class="group-controls">
+			<button type="submit" class="btn btn-important"><?= _t('gen.action.submit') ?></button>
+			<button type="reset" class="btn"><?= _t('gen.action.cancel') ?></button>
+		</div>
+	</div>
+</form>
