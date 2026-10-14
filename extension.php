@@ -110,7 +110,7 @@ final class RetryAfterAllowlistExtension extends Minz_Extension {
 		$this->allowlist = $rules;
 		$this->formInput = $rules->text();
 		Minz_Request::good(_t('feedback.conf.updated'), [
-			'c' => 'extension', 'a' => 'configure', 'e' => urlencode($this->getName()),
+			'c' => 'extension', 'a' => 'configure', 'params' => ['e' => urlencode($this->getName())],
 		]);
 	}
 
