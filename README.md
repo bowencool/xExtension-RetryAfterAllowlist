@@ -13,6 +13,8 @@ For example, a single RSSHub route returns `503`. FreshRSS records a cooldown fo
 
 The default allowlist is **empty**. Only an administrator can configure it, and its rules apply to all users because FreshRSS cooldown records are shared.
 
+![Example allowlist settings](screenshots/configuration.jpg)
+
 ## Requirements
 
 - FreshRSS **1.30.0 or newer**; integration tested on **1.30.1**.
